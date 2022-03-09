@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@cypress/code-coverage": "^3.10.0-dev.1",
+    "@cypress/instrument-cra": "^1.4.0",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -13,14 +15,18 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0",
-    "typescript": "^4.5.5",
+    "todomvc-app-css": "^2.4.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
+    "clean": "rimraf dist .nyc_output coverage",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "test": "npm run clean && npm run cy:run",
+    "cy:run": "start-test start 3000 cy:run:e2e && npm run cy:run:ct",
+    "cy:run:e2e": "npx cypress run --e2e --env coverage=true",
+    "cy:run:ct": "npx cypress run --component --env coverage=true"
   },
   "eslintConfig": {
     "extends": [
@@ -39,5 +45,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@cypress/react": "^5.12.2",
+    "@cypress/webpack-dev-server": "^1.8.0",
+    "cypress": "https://cdn.cypress.io/beta/npm/10.0.0/darwin-x64/circle-10.0-release-58ccda57b4f740d984a316964bd3d195cf8d909c/cypress.tgz",
+    "rimraf": "^3.0.2",
+    "start-server-and-test": "^1.14.0",
+    "typescript": "^4.5.5",
+    "webpack-dev-server": "^4.7.4"
   }
 }
