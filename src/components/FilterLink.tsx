@@ -1,20 +1,23 @@
+import { TodoFilters } from './TodosProvider';
 
 export interface FilterLinkProps {
-  filter: string;
-  onSetActiveFilter: (filteR: string) => void;
+  activeFilter: TodoFilters;
+  filter: TodoFilters;
+  onSetActiveFilter: (filter: TodoFilters) => void;
   text: string;
 }
 
 export const FilterLink: React.FC<FilterLinkProps> = ({
+  activeFilter,
   filter,
   onSetActiveFilter,
   text,
 }) => (
   // eslint-disable-next-line jsx-a11y/anchor-is-valid
   <a
-    className={`${filter === text ? 'selected' : ''}`}
+    className={`${activeFilter === filter ? 'selected' : ''}`}
     style={{ cursor: 'pointer' }}
-    onClick={() => onSetActiveFilter(text)}
+    onClick={() => onSetActiveFilter(filter)}
   >
     {text}
   </a>

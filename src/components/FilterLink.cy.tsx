@@ -9,12 +9,12 @@ describe('<FilterLink />', () => {
   });
 
   it('should have class selected if is active', () => {
-    mountFilterLink({ text: 'All', filter: 'All' });
+    mountFilterLink({ text: 'All', filter: 'show_all' });
     cy.get('a').should('have.class', 'selected');
   });
 
   it('should not have class selected if not active', () => {
-    mountFilterLink({ text: 'All', filter: 'Completed' });
+    mountFilterLink({ text: 'All', filter: 'show_completed' });
     cy.get('a').should('not.have.class', 'selected');
   });
 
@@ -26,8 +26,9 @@ describe('<FilterLink />', () => {
 });
 
 function mountFilterLink(options: Partial<FilterLinkProps> = {}) {
-  const {...props }: FilterLinkProps = {
-    filter: '',
+  const { ...props }: FilterLinkProps = {
+    activeFilter: 'show_all',
+    filter: 'show_all',
     text: 'Link Text',
     onSetActiveFilter: cy.spy().as('onSetActiveFilter'),
     ...options,

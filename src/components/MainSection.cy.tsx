@@ -52,8 +52,12 @@ describe('<MainSection />', () => {
 
     it('should call completeAllTodos on change', () => {
       mountMainSection({ todos });
-      cy.get('input[type=checkbox].toggle-all').click({ force: true });
-      cy.get('@onCompleteAllTodos').should('be.called');
+      cy.get('.toggle-all+label').click({ force: true });
+      cy.get('@onCompleteAllTodos').should('have.been.calledWith', true);
+      //untoggle
+      // cy.get('@onCompleteAllTodos').invoke('resetHistory');
+      cy.get('.toggle-all+label').click({ force: true });
+      cy.get('@onCompleteAllTodos').invoke('getCall', 1).should('have.been.calledWith', false);
     });
   });
 
@@ -203,9 +207,10 @@ describe('<MainSection />', () => {
       cy.get('@onDeleteTodo').should('have.been.calledWith', todos[0].id);
     });
 
-    it('should not render a list if there are no todos', () => {
+    it('when there are no todos, the main list and footer should be hidden', () => {
       mountMainSection({ todos: [] });
-      cy.get('li.todo').should('have.length', 0);
+      cy.get('.todo-list').should('not.exist');
+      cy.get('.footer').should('not.exist');
     });
   });
 });
@@ -214,6 +219,7 @@ function mountMainSection(options: { todos: Todo[] }) {
   const { todos } = options;
   return mount(
     <MainSection
+      activeFilter='show_all'
       todos={todos}
       onAddTodo={cy.spy().as('onAddTodo')}
       onCompleteAllTodos={cy.spy().as('onCompleteAllTodos')}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount } from '@cypress/react';
 import Footer from './Footer';
+import { TodoFilters } from './TodosProvider';
 
 describe('<Footer />', () => {
   it('should render', () => {
@@ -57,6 +58,7 @@ function mountFooter(
   } = {}
 ) {
   const props = {
+    activeFilter: 'show_all' as TodoFilters,
     activeCount: 0,
     completedCount: 0,
     onClearCompleted: cy.spy().as('onClearCompleted'),

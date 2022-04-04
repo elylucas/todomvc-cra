@@ -49,7 +49,7 @@
   "devDependencies": {
     "@cypress/react": "^5.12.2",
     "@cypress/webpack-dev-server": "^1.8.0",
-    "cypress": "https://cdn.cypress.io/beta/npm/10.0.0/darwin-x64/circle-10.0-release-58ccda57b4f740d984a316964bd3d195cf8d909c/cypress.tgz",
+    "cypress": "https://cdn.cypress.io/beta/npm/10.0.0/darwin-x64/10.0-release-404447e397190ebb0f8ce0bb270ea9a806ca78c6/cypress.tgz",
     "rimraf": "^3.0.2",
     "start-server-and-test": "^1.14.0",
     "typescript": "^4.5.5",

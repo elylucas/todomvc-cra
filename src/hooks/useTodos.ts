@@ -5,6 +5,7 @@ export const useTodos = () => {
   const todosContext = useContext(TodosContext);
 
   return {
+    activeFilter: todosContext.activeFilter,
     addTodo: todosContext.addTodo,
     completeAllTodos: todosContext.completeAllTodos,
     clearCompleted: todosContext.clearCompleted,
