@@ -1,4 +1,3 @@
-import { mount } from '@cypress/react';
 import App from './App';
 
 describe('<App />', () => {
@@ -13,5 +12,5 @@ describe('<App />', () => {
 });
 
 function mountApp() {
-  mount(<App />);
+  cy.mount(<App />);
 }

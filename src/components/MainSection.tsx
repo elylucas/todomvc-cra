@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import { useTodos } from '../hooks/useTodos';
-import { Todo } from '../models/Todo';
+import { TodoFilters, TodoInfo } from '../models/Todo';
 import Footer from './Footer';
 import { Header } from './Header';
 import { TodoList } from './TodoList';
-import { TodoFilters } from './TodosProvider';
 
 interface MainSectionProps {
-  activeFilter: TodoFilters;
-  todos: Todo[];
   onAddTodo: (text: string) => void;
   onCompleteAllTodos: (completed: boolean) => void;
   onClearCompleted: () => void;
@@ -16,11 +13,10 @@ interface MainSectionProps {
   onToggleTodoComplete: (id: number) => void;
   onEditTodo: (id: number, text: string) => void;
   onDeleteTodo: (id: number) => void;
+  todoInfo: TodoInfo;
 }
 
 export const MainSection: React.FC<MainSectionProps> = ({
-  activeFilter,
-  todos,
   onAddTodo,
   onCompleteAllTodos,
   onClearCompleted,
@@ -28,14 +24,13 @@ export const MainSection: React.FC<MainSectionProps> = ({
   onEditTodo,
   onSetActiveFilter,
   onToggleTodoComplete,
+  todoInfo,
 }) => {
-  const completedTodos = todos.filter((x) => x.completed);
+  // const completedTodos = todos.filter((x) => x.completed);
   const [allCompleteToggled, setAllCompleteToggled] = useState(false);
-  // const inProgressTodos = todos.filter((x) => !x.completed);
-  const completedCount = completedTodos.length;
-  const todosCount = todos.length;
+  // const completedCount = completedTodos.length;
 
-  const hasTodos = !!todos.length;
+  const hasTodos = !!todoInfo.total;
 
   const handleOnCompleteAllTodos = () => {
     const toggled = !allCompleteToggled;
@@ -53,21 +48,21 @@ export const MainSection: React.FC<MainSectionProps> = ({
               <input
                 className="toggle-all"
                 type="checkbox"
-                checked={completedCount === todosCount}
+                checked={todoInfo.complete === todoInfo.total}
                 onChange={handleOnCompleteAllTodos}
               />
               <label onClick={handleOnCompleteAllTodos} />
             </span>
             <TodoList
-              todos={todos}
+              todos={todoInfo.filteredTodos}
               onToggleTodoComplete={onToggleTodoComplete}
               onEditTodo={onEditTodo}
               onDeleteTodo={onDeleteTodo}
             />
             <Footer
-              activeFilter={activeFilter}
-              completedCount={completedCount}
-              activeCount={todosCount - completedCount}
+              activeFilter={todoInfo.filter}
+              completedCount={todoInfo.complete}
+              activeCount={todoInfo.active}
               onClearCompleted={onClearCompleted}
               onSetActiveFilter={onSetActiveFilter}
             />
@@ -82,8 +77,6 @@ export default function Connect() {
   const hook = useTodos();
   return (
     <MainSection
-      activeFilter={hook.activeFilter}
-      todos={hook.todos}
       onAddTodo={hook.addTodo}
       onCompleteAllTodos={hook.completeAllTodos}
       onClearCompleted={hook.clearCompleted}
@@ -91,6 +84,7 @@ export default function Connect() {
       onEditTodo={hook.editTodo}
       onSetActiveFilter={hook.setActiveFilter}
       onToggleTodoComplete={hook.toggleTodoComplete}
+      todoInfo={hook.todoInfo}
     />
   );
 }

@@ -1,4 +1,4 @@
-import { TodoFilters } from './TodosProvider';
+import { TodoFilters } from '../models/Todo';
 
 export interface FilterLinkProps {
   activeFilter: TodoFilters;

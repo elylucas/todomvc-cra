@@ -22,6 +22,6 @@
     // "typeRoots": ["./node_modules/cypress/types"]
   },
   "include": [
-    "src"
+    "src", "cypress.d.ts"
   ]
 }

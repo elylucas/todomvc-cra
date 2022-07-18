@@ -1,5 +1,3 @@
-import { mount } from '@cypress/react';
-import React from 'react';
 import { Todo } from '../models/Todo';
 import { TodoList } from './TodoList';
 
@@ -9,7 +7,7 @@ function mountTodoList(
   onEditTodo = cy.spy().as('onEditTodo'),
   onDeleteTodo = cy.spy().as('onDeleteTodo')
 ) {
-  mount(
+  cy.mount(
     <div className="todo-list">
       <TodoList
         todos={todos}

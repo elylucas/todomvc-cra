@@ -1,5 +1,4 @@
-import { mount } from '@cypress/react';
-import { Todo } from '../models/Todo';
+import { getTodoInfo, Todo, TodoFilters } from '../models/Todo';
 import { MainSection } from './MainSection';
 
 describe('<MainSection />', () => {
@@ -10,13 +9,13 @@ describe('<MainSection />', () => {
   });
 
   it('should render', () => {
-    mountMainSection({ todos });
+    mountMainSection(todos);
     cy.get('section').should('have.class', 'main');
   });
 
   describe('header', () => {
     it('adding a new todo adds it to the list', () => {
-      mountMainSection({ todos: [] });
+      mountMainSection([]);
       cy.get('header input[type=text]').type('test123{enter}');
       cy.get('@onAddTodo').should('have.been.calledWith', 'test123');
     });
@@ -39,25 +38,27 @@ describe('<MainSection />', () => {
     });
 
     it('should render toggle all input', () => {
-      mountMainSection({ todos });
+      mountMainSection(todos);
       cy.get('input[type=checkbox]')
         .should('have.class', 'toggle-all')
         .and('be.checked');
     });
 
     it('should be checked if all todos completed', () => {
-      mountMainSection({ todos });
+      mountMainSection(todos);
       cy.get('input[type=checkbox].toggle-all').should('be.checked');
     });
 
     it('should call completeAllTodos on change', () => {
-      mountMainSection({ todos });
+      mountMainSection(todos);
       cy.get('.toggle-all+label').click({ force: true });
       cy.get('@onCompleteAllTodos').should('have.been.calledWith', true);
       //untoggle
       // cy.get('@onCompleteAllTodos').invoke('resetHistory');
       cy.get('.toggle-all+label').click({ force: true });
-      cy.get('@onCompleteAllTodos').invoke('getCall', 1).should('have.been.calledWith', false);
+      cy.get('@onCompleteAllTodos')
+        .invoke('getCall', 1)
+        .should('have.been.calledWith', false);
     });
   });
 
@@ -70,7 +71,7 @@ describe('<MainSection />', () => {
           completed: false,
         },
       ];
-      mountMainSection({ todos });
+      mountMainSection(todos);
       cy.get('footer').contains('1 item left');
     });
 
@@ -82,7 +83,7 @@ describe('<MainSection />', () => {
           completed: true,
         },
       ];
-      mountMainSection({ todos });
+      mountMainSection(todos);
       cy.contains('button', 'Clear completed').click();
       cy.get('@onClearCompleted').should('have.been.called');
     });
@@ -95,9 +96,12 @@ describe('<MainSection />', () => {
           completed: true,
         },
       ];
-      mountMainSection({ todos });
+      mountMainSection(todos);
       cy.get('a').contains('Active').click();
-      cy.get('@onSetActiveFilter').should('have.been.calledWith', 'Active');
+      cy.get('@onSetActiveFilter').should(
+        'have.been.calledWith',
+        'show_active'
+      );
     });
   });
 
@@ -120,7 +124,7 @@ describe('<MainSection />', () => {
           completed: false,
         },
       ];
-      mountMainSection({ todos });
+      mountMainSection(todos);
       cy.get('li.todo').should('have.length', 3);
     });
 
@@ -132,7 +136,7 @@ describe('<MainSection />', () => {
           completed: false,
         },
       ];
-      mountMainSection({ todos });
+      mountMainSection(todos);
       cy.contains('li.todo', todos[0].text).find('input').click();
       cy.get('@onToggleTodoComplete').should(
         'have.been.calledWith',
@@ -153,7 +157,7 @@ describe('<MainSection />', () => {
           completed: false,
         },
       ];
-      mountMainSection({ todos });
+      mountMainSection(todos);
       cy.contains('li.todo', todos[1].text).find('input').click();
       cy.get('@onToggleTodoComplete')
         .should('have.been.calledWith', todos[1].id)
@@ -168,7 +172,7 @@ describe('<MainSection />', () => {
           completed: false,
         },
       ];
-      mountMainSection({ todos });
+      mountMainSection(todos);
       cy.contains('li.todo', todos[0].text)
         .find('button.destroy')
         .click({ force: true });
@@ -183,7 +187,7 @@ describe('<MainSection />', () => {
           completed: false,
         },
       ];
-      mountMainSection({ todos });
+      mountMainSection(todos);
       cy.contains('li.todo', todos[0].text).as('li').find('label').dblclick();
       cy.get('@li').find('input[type=text]').type(' test123{enter}');
       cy.get('@onEditTodo').should(
@@ -201,26 +205,25 @@ describe('<MainSection />', () => {
           completed: false,
         },
       ];
-      mountMainSection({ todos });
+      mountMainSection(todos);
       cy.contains('li.todo', todos[0].text).as('li').find('label').dblclick();
       cy.get('@li').find('input[type=text]').clear().type('{enter}');
       cy.get('@onDeleteTodo').should('have.been.calledWith', todos[0].id);
     });
 
     it('when there are no todos, the main list and footer should be hidden', () => {
-      mountMainSection({ todos: [] });
+      mountMainSection([]);
       cy.get('.todo-list').should('not.exist');
       cy.get('.footer').should('not.exist');
     });
   });
 });
 
-function mountMainSection(options: { todos: Todo[] }) {
-  const { todos } = options;
-  return mount(
+function mountMainSection(todos: Todo[], filter: TodoFilters = 'show_all') {
+  const todoInfo = getTodoInfo(todos, filter);
+
+  return cy.mount(
     <MainSection
-      activeFilter='show_all'
-      todos={todos}
       onAddTodo={cy.spy().as('onAddTodo')}
       onCompleteAllTodos={cy.spy().as('onCompleteAllTodos')}
       onClearCompleted={cy.spy().as('onClearCompleted')}
@@ -228,6 +231,7 @@ function mountMainSection(options: { todos: Todo[] }) {
       onDeleteTodo={cy.spy().as('onDeleteTodo')}
       onSetActiveFilter={cy.spy().as('onSetActiveFilter')}
       onToggleTodoComplete={cy.spy().as('onToggleTodoComplete')}
+      todoInfo={todoInfo}
     />
   );
 }

@@ -1,14 +1,13 @@
-import "@cypress/instrument-cra";
+import '@cypress/instrument-cra';
 import { defineConfig } from 'cypress';
-import { devServer } from '@cypress/react/plugins/react-scripts';
-import codeCoverageTask from "@cypress/code-coverage/task";
+import codeCoverageTask from '@cypress/code-coverage/task';
 
 export default defineConfig({
   env: {
     coverage: true,
     codeCoverage: {
-      exclude: 'cypress/**/*.*'
-    }
+      exclude: 'cypress/**/*.*',
+    },
   },
   e2e: {
     baseUrl: 'http://localhost:3000',
@@ -17,14 +16,15 @@ export default defineConfig({
       return config;
     },
   },
-
   component: {
-    devServer,
+    devServer: {
+      framework: 'create-react-app',
+      bundler: 'webpack'
+    },
     setupNodeEvents(on, config) {
       codeCoverageTask(on, config);
       on('file:preprocessor', require('@cypress/code-coverage/use-babelrc'));
       return config;
     },
-
   },
 });

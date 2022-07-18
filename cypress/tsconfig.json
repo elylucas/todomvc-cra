@@ -5,5 +5,5 @@
     "types": ["cypress"],
     "esModuleInterop": true
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts", "../cypress.d.ts"]
 }

@@ -1,5 +1,4 @@
 import React from 'react';
-import { mount } from '@cypress/react';
 import { FilterLink, FilterLinkProps } from './FilterLink';
 
 describe('<FilterLink />', () => {
@@ -33,5 +32,5 @@ function mountFilterLink(options: Partial<FilterLinkProps> = {}) {
     onSetActiveFilter: cy.spy().as('onSetActiveFilter'),
     ...options,
   };
-  mount(<FilterLink {...props} />);
+  cy.mount(<FilterLink {...props} />);
 }

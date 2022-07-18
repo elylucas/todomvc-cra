@@ -1,11 +1,6 @@
 import { FilterLink } from './FilterLink';
-// import {
-//   SHOW_ALL,
-//   SHOW_COMPLETED,
-//   SHOW_ACTIVE,
-// } from '../constants/TodoFilters';
 import { PropsWithChildren } from 'react';
-import { TodoFilters } from './TodosProvider';
+import { TodoFilters } from '../models/Todo';
 
 interface FooterProps
   extends PropsWithChildren<{

@@ -1,7 +1,5 @@
-import React from 'react';
-import { mount } from '@cypress/react';
 import Footer from './Footer';
-import { TodoFilters } from './TodosProvider';
+import { TodoFilters } from '../models/Todo';
 
 describe('<Footer />', () => {
   it('should render', () => {
@@ -65,5 +63,5 @@ function mountFooter(
     onSetActiveFilter: cy.spy().as('onSetActiveFilter'),
     ...options,
   };
-  mount(<Footer {...props} />);
+  cy.mount(<Footer {...props} />);
 }

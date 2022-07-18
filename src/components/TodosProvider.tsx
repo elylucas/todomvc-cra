@@ -1,9 +1,7 @@
 import { createContext, useCallback, useMemo, useState } from 'react';
-import { Todo } from '../models/Todo';
+import { getTodoInfo, Todo, TodoFilters, TodoInfo } from '../models/Todo';
 
 interface TodosContextInterface {
-  todos: Todo[];
-  activeFilter: TodoFilters;
   addTodo: (text: string) => void;
   completeAllTodos: (complete: boolean) => void;
   toggleTodoComplete: (id: number) => void;
@@ -11,6 +9,7 @@ interface TodosContextInterface {
   editTodo: (id: number, text: string) => void;
   deleteTodo: (id: number) => void;
   setActiveFilter: (filter: TodoFilters) => void;
+  todoInfo: TodoInfo;
 }
 
 export const TodosContext = createContext<TodosContextInterface>({} as any);
@@ -19,7 +18,6 @@ export interface TodosProviderProps {
   todos?: Todo[];
 }
 
-export type TodoFilters = 'show_all' | 'show_active' | 'show_completed';
 // export const TodoFilters = {
 //   show_all: 'show_all',
 //   show_active: 'show_active',
@@ -41,7 +39,6 @@ export const TodosProvider: React.FC<TodosProviderProps> = ({
 }) => {
   const [todos, setTodos] = useState<Todo[]>(todosFromProps);
   const [activeFilter, setActiveFilter] = useState<TodoFilters>('show_all');
-  // const [activeFilter, setActiveFilter] = useState<TodoFilters2>(TodoFilters2.show_all);
 
   const completeAllTodos = useCallback(
     (completed: boolean) => {
@@ -56,14 +53,8 @@ export const TodosProvider: React.FC<TodosProviderProps> = ({
     setTodos(newTodos);
   }, [todos]);
 
-  const filteredTodos = useMemo(() => {
-    if (activeFilter === 'show_all') {
-      return todos;
-    } else if (activeFilter === 'show_active') {
-      return todos.filter((t) => !t.completed);
-    } else {
-      return todos.filter((t) => t.completed);
-    }
+  const todoInfo: TodoInfo = useMemo(() => {
+    return getTodoInfo(todos, activeFilter);
   }, [todos, activeFilter]);
 
   const toggleTodoComplete = useCallback(
@@ -128,15 +119,14 @@ export const TodosProvider: React.FC<TodosProviderProps> = ({
   return (
     <TodosContext.Provider
       value={{
-        activeFilter,
         addTodo,
         completeAllTodos,
         clearCompleted,
         deleteTodo,
         editTodo,
         setActiveFilter,
-        todos: filteredTodos,
         toggleTodoComplete,
+        todoInfo,
       }}
     >
       {children}
