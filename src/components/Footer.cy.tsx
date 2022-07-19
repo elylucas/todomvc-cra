@@ -30,7 +30,7 @@ describe('<Footer />', () => {
 
   it('should render clear button when completed todos', () => {
     mountFooter({ completedCount: 1 });
-    cy.contains('button', 'Clear completed').should(
+    cy.contains('a', 'Clear completed').should(
       'have.class',
       'clear-completed'
     );
@@ -43,7 +43,7 @@ describe('<Footer />', () => {
 
   it('should call onClearCompleted on clear button click', () => {
     mountFooter({ completedCount: 1 });
-    cy.contains('button', 'Clear completed').click();
+    cy.contains('a', 'Clear completed').click();
     cy.get('@onClearCompleted').should('have.been.called');
   });
 });

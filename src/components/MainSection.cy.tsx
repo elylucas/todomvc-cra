@@ -84,7 +84,7 @@ describe('<MainSection />', () => {
         },
       ];
       mountMainSection(todos);
-      cy.contains('button', 'Clear completed').click();
+      cy.contains('a', 'Clear completed').click();
       cy.get('@onClearCompleted').should('have.been.called');
     });
 

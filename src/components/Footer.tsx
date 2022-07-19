@@ -43,9 +43,9 @@ const Footer: React.FC<FooterProps> = ({
         ))}
       </ul>
       {!!completedCount && (
-        <button className="clear-completed" onClick={onClearCompleted}>
+        <a className="clear-completed" onClick={onClearCompleted}>
           Clear completed
-        </button>
+        </a>
       )}
     </footer>
   );

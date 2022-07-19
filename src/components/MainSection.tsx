@@ -53,12 +53,14 @@ export const MainSection: React.FC<MainSectionProps> = ({
               />
               <label onClick={handleOnCompleteAllTodos} />
             </span>
+
             <TodoList
               todos={todoInfo.filteredTodos}
               onToggleTodoComplete={onToggleTodoComplete}
               onEditTodo={onEditTodo}
               onDeleteTodo={onDeleteTodo}
             />
+
             <Footer
               activeFilter={todoInfo.filter}
               completedCount={todoInfo.complete}
